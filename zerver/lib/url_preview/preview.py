@@ -1,8 +1,8 @@
+import logging
 import re
 from typing import Any, Callable, Match, Optional
 from urllib.parse import urljoin
 
-import logging
 import magic
 import requests
 from django.conf import settings
@@ -58,7 +58,7 @@ def valid_content_type(url: str) -> bool:
     try:
         response = PreviewSession().get(url, stream=True)
     except requests.RequestException as e:
-        logging.exception(f"An exception occurred for URL `{url}`: {e.strerror} ")
+        logging.exception("An exception occurred for URL `%s`: %s", url, e.strerror.replace('\n', ' '))
         return False
 
     if not response.ok:
