@@ -2,6 +2,7 @@ import re
 from typing import Any, Callable, Match, Optional
 from urllib.parse import urljoin
 
+import logging
 import magic
 import requests
 from django.conf import settings
@@ -56,7 +57,8 @@ def guess_mimetype_from_content(response: requests.Response) -> str:
 def valid_content_type(url: str) -> bool:
     try:
         response = PreviewSession().get(url, stream=True)
-    except requests.RequestException:
+    except requests.RequestException as e:
+        logging.exception(f"An exception occurred for URL `{url}`: {e.strerror} ")
         return False
 
     if not response.ok:
