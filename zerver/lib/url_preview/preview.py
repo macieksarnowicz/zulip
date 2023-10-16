@@ -58,7 +58,9 @@ def valid_content_type(url: str) -> bool:
     try:
         response = PreviewSession().get(url, stream=True)
     except requests.RequestException as e:
-        logging.exception("An exception occurred for URL `%s`: %s", url, e.strerror.replace('\n', ' '))
+        logging.exception(
+            "An exception occurred for URL `%s`: %s", url, e.strerror.replace("\n", " ")
+        )
         return False
 
     if not response.ok:
