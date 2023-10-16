@@ -1,3 +1,4 @@
+import logging
 import re
 from typing import Any, Callable, Match, Optional
 from urllib.parse import urljoin
@@ -34,6 +35,12 @@ ZULIP_URL_PREVIEW_USER_AGENT = (
 HEADERS = {"User-Agent": ZULIP_URL_PREVIEW_USER_AGENT}
 TIMEOUT = 15
 
+# Special cookies to bypass Google's Consent Mode in EU
+COOKIES = {
+    "CONSENT": "YES+cb.20231201-08-p0.cs+FX+111",
+    "SOCS": "CAISHAgBEhJnd3NfMjAyMzA4MTAtMF9SQzIaAmRlIAEaBgiAo_CmBg",
+}
+
 
 class PreviewSession(OutgoingSession):
     def __init__(self) -> None:
@@ -53,10 +60,19 @@ def guess_mimetype_from_content(response: requests.Response) -> str:
     return mime_magic.from_buffer(content)
 
 
+def get_cookies(url: str) -> dict[str, str]:
+    if url.find("google") != -1 or url.find("goo.gl") != -1:
+        logging.info("Google Cookies used")
+        return COOKIES
+    else:
+        return {}
+
+
 def valid_content_type(url: str) -> bool:
     try:
-        response = PreviewSession().get(url, stream=True)
-    except requests.RequestException:
+        response = PreviewSession().get(url, stream=True, cookies=get_cookies(url))
+    except requests.RequestException as e:
+        logging.exception("An exception occurred for URL `%s`: %s", url, str(e).replace("\n", " "))
         return False
 
     if not response.ok:
@@ -99,7 +115,7 @@ def get_link_embed_data(
     if data is not None and isinstance(data, UrlOEmbedData):
         return data
 
-    response = PreviewSession().get(mark_sanitized(url), stream=True)
+    response = PreviewSession().get(mark_sanitized(url), stream=True, cookies=get_cookies(url))
     if not response.ok:
         return None
 
