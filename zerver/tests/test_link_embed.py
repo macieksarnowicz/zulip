@@ -637,9 +637,10 @@ class PreviewTestCase(ZulipTestCase):
         with self.settings(INLINE_URL_EMBED_PREVIEW=True, TEST_SUITE=False):
             with self.assertLogs(level="INFO") as info_logs:
                 FetchLinksEmbedData().consume(event)
+            self.assertTrue("An exception occurred for URL" in info_logs.output[0])
             self.assertTrue(
                 "INFO:root:Time spent on get_link_embed_data for http://test.org/: "
-                in info_logs.output[0]
+                in info_logs.output[1]
             )
 
         msg = Message.objects.get(id=msg_id)
