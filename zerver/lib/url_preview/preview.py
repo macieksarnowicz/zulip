@@ -36,7 +36,11 @@ HEADERS = {"User-Agent": ZULIP_URL_PREVIEW_USER_AGENT}
 TIMEOUT = 15
 
 # Special cookies to bypass Google's Consent Mode in EU
-COOKIES = {"CONSENT": "YES+cb.20231201-08-p0.cs+FX+111", "SOCS": "CAISHAgBEhJnd3NfMjAyMzA4MTAtMF9SQzIaAmRlIAEaBgiAo_CmBg"}
+COOKIES = {
+    "CONSENT": "YES+cb.20231201-08-p0.cs+FX+111",
+    "SOCS": "CAISHAgBEhJnd3NfMjAyMzA4MTAtMF9SQzIaAmRlIAEaBgiAo_CmBg",
+}
+
 
 class PreviewSession(OutgoingSession):
     def __init__(self) -> None:
@@ -56,8 +60,8 @@ def guess_mimetype_from_content(response: requests.Response) -> str:
     return mime_magic.from_buffer(content)
 
 
-def get_cookies(url: str):
-    if (url.find("google") != -1 or url.find("goo.gl") != -1):
+def get_cookies(url: str) -> dict[str, str]:
+    if url.find("google") != -1 or url.find("goo.gl") != -1:
         logging.info("Google Cookies used")
         return COOKIES
     else:
