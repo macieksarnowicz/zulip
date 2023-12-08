@@ -62,7 +62,7 @@ def get_cookies(url: str):
         return COOKIES
     else:
         return {}
-    
+
 
 def valid_content_type(url: str) -> bool:
     try:
