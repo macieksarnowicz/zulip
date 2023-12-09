@@ -1,6 +1,6 @@
 import logging
 import re
-from typing import Any, Callable, Match, Optional
+from typing import Any, Callable, Dict, Match, Optional
 from urllib.parse import urljoin
 
 import magic
@@ -60,7 +60,7 @@ def guess_mimetype_from_content(response: requests.Response) -> str:
     return mime_magic.from_buffer(content)
 
 
-def get_cookies(url: str) -> dict[str, str]:
+def get_cookies(url: str) -> Dict[str, str]:
     if url.find("google") != -1 or url.find("goo.gl") != -1:
         logging.info("Google Cookies used")
         return COOKIES
