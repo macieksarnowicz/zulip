@@ -137,7 +137,65 @@ Test it with:
 ./tools/test-backend zerver.tests.test_link_embed
 ```
 
-(requires the Zulip development environment; see `docs/development/setup-recommended.md`.)
+(This needs the development environment; see "Running tests locally".)
+
+## Running tests locally
+
+The dev machine is Windows with WSL 2 (Ubuntu 26.04, systemd enabled). Zulip's
+development environment runs directly inside WSL, without Vagrant or Docker.
+Upstream guide: `docs/development/setup-recommended.md` (Windows / WSL tab).
+Testing docs: `docs/testing/`.
+
+### One-time setup
+
+Upstream recommends a **dedicated WSL instance** for Zulip, because provisioning installs
+system packages (PostgreSQL, RabbitMQ, Redis, memcached, Node, etc.) and may conflict with
+other tools. Using the existing instance usually works.
+
+```bash
+# 1. Services Zulip needs (systemd must be enabled in /etc/wsl.conf).
+sudo apt update && sudo apt upgrade
+sudo apt install rabbitmq-server memcached redis-server postgresql
+
+# 2. Make RabbitMQ listen on localhost. Add these lines to
+#    /etc/rabbitmq/rabbitmq-env.conf if they are missing:
+#      NODE_IP_ADDRESS=127.0.0.1
+#      NODE_PORT=5672
+
+# 3. Provision. The checkout must be on the WSL disk (~/zulip), not under /mnt/c.
+cd ~/zulip
+./tools/provision            # takes a while; installs into .venv, node_modules, etc.
+```
+
+### Running tests
+
+```bash
+cd ~/zulip
+source .venv/bin/activate
+
+./tools/test-backend zerver.tests.test_link_embed   # our patch's tests
+./tools/test-backend zerver.tests.test_link_embed.PreviewTestCase.test_http_error_get_data  # one test (the one our patch edits)
+./tools/test-backend --rerun                        # rerun only the last failures
+./tools/test-backend                                # full backend suite (slow)
+
+./tools/lint zerver/lib/url_preview/preview.py      # lint/format the files you changed
+./tools/run-mypy                                    # type checks
+./tools/test-js-with-node                           # frontend unit tests, if web/ changed
+```
+
+To see the app running, use `./tools/run-dev` and open http://localhost:9991.
+
+### After switching branches
+
+The provisioned environment matches the checked-out version. After switching between
+version branches (e.g. `11.x` ↔ `12.x`) or pulling upstream changes, run
+`./tools/provision` again before testing. It is quick when little has changed.
+`tools/test-backend` warns if provisioning is out of date.
+
+### Before pushing a version branch
+
+For every customisation commit on the branch, run its listed tests, plus `./tools/lint`
+on the touched files. Record the result in `TASKS.md`.
 
 ## Rules for future changes
 

@@ -19,7 +19,8 @@ Production runs upstream 12.3 without the Google Consent Mode patch. Follow
       applied cleanly: `preview.py` is unchanged upstream between 11.0 and 12.3. A review
       of the new upstream tests found none affected by the extra log lines.
 - [ ] Run `./tools/test-backend zerver.tests.test_link_embed`. This needs the Zulip dev
-      environment, which is not set up on the dev machine yet.
+      environment, which is not set up on the dev machine yet. See "Running tests
+      locally" in `AGENTS.md`.
 - [x] Copy `oceanposse/` and `AGENTS.md` from `11.x`, and update hashes and versions in
       the docs.
 - [x] Push `12.x` to `origin`.
