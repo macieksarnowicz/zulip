@@ -52,6 +52,14 @@ Zulip.
 Plan the OS upgrade before Zulip drops 22.04 support. See
 `docs/production/upgrade.md` (upgrading the operating system).
 
+### T7: Combined feed as home view, and pin "Main Chat" for everyone (in progress)
+Script: `oceanposse/set-user-defaults.py`. Tested on the dev database (dry run, apply,
+re-run shows no changes).
+- [ ] Get the script onto the server and run a dry run. Note the "not subscribed" users.
+- [ ] Run with `--apply`.
+- [ ] Decide how to handle future users. New users get the Combined feed default
+      automatically, but pinning has no organization default, so re-run periodically.
+
 ### T6: TLS: serve only chat.oceanposse.com (deferred)
 The Zulip cert symlinks point to the combined `chat.panamaposse.com` cert. Switch to the
 `chat.oceanposse.com` cert and drop panamaposse. The user has deferred this.

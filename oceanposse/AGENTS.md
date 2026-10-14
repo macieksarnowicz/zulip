@@ -247,6 +247,15 @@ changes. Every change has to be carried forward to each new Zulip major version,
    major version").
    - `oceanposse/server-info.sh`: read-only host report. Run it as root on the server; it
      writes `/root/server-info.txt`.
+   - `oceanposse/set-user-defaults.py`: makes "Combined feed" the home view (both the
+     organization default and every existing user) and pins "Main Chat" for all
+     subscribers. Dry run by default; `--apply` writes. Run it as `zulip`, not root. It
+     can be re-run safely and only changes users that differ. Pins are per subscription,
+     so re-run it after new users join to pin the channel for them too.
+   - Scripts that use Django follow the `scripts/lib/check-database-compatibility` pattern
+     (`setup_path()`, `django.setup()`), and call Zulip's `zerver.actions` functions
+     rather than writing to models directly. That way clients get live events and the
+     audit log records the change. Test them locally against the dev database first.
 
 ## Production server (chat.oceanposse.com)
 
