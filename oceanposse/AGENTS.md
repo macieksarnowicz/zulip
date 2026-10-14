@@ -153,6 +153,13 @@ system packages (PostgreSQL, RabbitMQ, Redis, memcached, Node, etc.) and may con
 other tools. Using the existing instance usually works.
 
 ```bash
+# 0. Ubuntu 26.04 only: use classic sudo instead of sudo-rs (the 26.04 default).
+#    With sudo-rs, provision's nested `sudo` calls leave apt-get stopped (state T)
+#    at "Setting up <package> ...", and provisioning hangs forever.
+#    The dev machine uses classic sudo permanently.
+sudo update-alternatives --set sudo /usr/bin/sudo.ws
+sudo --version | head -1     # expect "Sudo version 1.9.x", not "sudo-rs"
+
 # 1. Services Zulip needs (systemd must be enabled in /etc/wsl.conf).
 sudo apt update && sudo apt upgrade
 sudo apt install rabbitmq-server memcached redis-server postgresql
