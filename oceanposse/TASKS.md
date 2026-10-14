@@ -12,7 +12,7 @@ How to use this file:
 ## Open
 
 ### T1: Move the fork to 12.x and redeploy with the patch (in progress)
-Production runs upstream 12.3 without the Google Consent Mode patch. Follow
+Production ran upstream 12.3 without the Google Consent Mode patch. Follow
 "Moving to a new major version" in `AGENTS.md`.
 - [x] Base: the **`12.3` tag** (matches production; decided 2026-10-14).
 - [x] Create `12.x` from `12.3` and cherry-pick the patch, giving `370aa666df`. It
@@ -27,13 +27,13 @@ Production runs upstream 12.3 without the Google Consent Mode patch. Follow
 - [x] Copy `oceanposse/` and `AGENTS.md` from `11.x`, and update hashes and versions in
       the docs.
 - [x] Push `12.x` to `origin`.
-- [ ] Announce the maintenance to users. During US night time, run
-      `upgrade-zulip-from-git 12.x` on the server.
+- [x] Run `upgrade-zulip-from-git 12.x` on the server.
       - 2026-10-14: the first attempt was killed when the web console disconnected,
         leaving services stopped and a stale lock. Removed the lock (nothing was
-        running) and re-ran the upgrade. Outcome pending.
-- [ ] Verify that a Google link preview works and that `oceanposse/` exists in the
-      deployment.
+        running) and re-ran the upgrade, which completed. Deployed version
+        `12.3-5-g95599b077f`, all services RUNNING, `oceanposse/` present.
+- [x] Verify that `oceanposse/` exists in the deployment.
+- [ ] Verify that a Google link preview works (post a Google Maps link in a channel).
 
 ### T2: Find what uses the disk (todo)
 32 of 49 GB is used, but uploads plus the database are only about 3.2 GB. Write a

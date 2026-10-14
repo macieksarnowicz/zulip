@@ -28,9 +28,9 @@ Related files:
   (`b31982251f`) plus:
   - `370aa666df` "Workaround for Google Consent Mode" (the code patch)
   - one commit carrying `oceanposse/` and the root `AGENTS.md` forward from `11.x`
-- **Current production state (2026-10): the server runs upstream Zulip 12.3 *without*
-  our patch.** It was deployed from the upstream `12.3` tag on 2026-10-03. Deploying the
-  fork `12.x` branch is pending (see `TASKS.md`, T1).
+- **Production runs the fork's `12.x` branch** (`12.3-5-g95599b077f`), deployed
+  2026-10-14. Before that it briefly ran plain upstream 12.3 (deployed 2026-10-03,
+  without our patch).
 - `11.x` is frozen. It is based on upstream `11.0-81` (`1b30049059`) plus
   `08afa6aeed` (the patch) and the first `oceanposse/` docs and tooling commits.
 - `main` holds the original 2023 development history of the patch (several
@@ -274,12 +274,12 @@ Snapshot from `oceanposse/server-info.sh`, run 2026-10-14. Re-run the script to 
   `/home/zulip/deployments/current/oceanposse/`.
 
 **Zulip**
-- Version 12.3 (stock upstream, **without our patch**), deployed 2026-10-03.
-  The previous deployment (`last`) is from 2025-09-07.
+- Version `12.3-5-g95599b077f`: the fork's `12.x` branch, with our patch. Deployed
+  2026-10-14 with `upgrade-zulip-from-git 12.x`.
 - `/etc/zulip/zulip.conf`: `zulip::profile::standalone`, PostgreSQL 16,
   `[deployment] git_repo_url = https://github.com/macieksarnowicz/zulip.git`.
   The fork is already the git source, so `upgrade-zulip-from-git 12.x` deploys our fork
-  branch. 12.3 was deployed from the plain upstream tag.
+  branch.
 - Upgrade command: `/home/zulip/deployments/current/scripts/upgrade-zulip-from-git <branch-or-tag>`
   (see `docs/production/upgrade.md`). The log is in `/var/log/zulip/upgrade.log`.
 - One organisation, "OCEAN POSSE" (root domain), with about 300 members
