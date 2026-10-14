@@ -18,9 +18,12 @@ Production runs upstream 12.3 without the Google Consent Mode patch. Follow
 - [x] Create `12.x` from `12.3` and cherry-pick the patch, giving `370aa666df`. It
       applied cleanly: `preview.py` is unchanged upstream between 11.0 and 12.3. A review
       of the new upstream tests found none affected by the extra log lines.
-- [ ] Run `./tools/test-backend zerver.tests.test_link_embed`. This needs the Zulip dev
-      environment, which is not set up on the dev machine yet. See "Running tests
-      locally" in `AGENTS.md`.
+- [x] Tests (2026-10-14, WSL dev env, Ubuntu 26.04 / Python 3.14). In the full backend
+      run (4557 tests), `test_link_embed` passes. Two unrelated failures:
+      - `test_bots...test_patch_bot_owner_of_bot_with_can_create_users`: flaky upstream
+        test (`UnboundLocalError` in `do_create_user`); it passes on rerun.
+      - `test_events...RealmPropertyActionTest.test_change_realm_property`: fails the same
+        way on plain upstream `12.3`, so it is upstream or environment related, not ours.
 - [x] Copy `oceanposse/` and `AGENTS.md` from `11.x`, and update hashes and versions in
       the docs.
 - [x] Push `12.x` to `origin`.
