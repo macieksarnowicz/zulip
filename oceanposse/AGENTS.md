@@ -262,8 +262,26 @@ changes. Every change has to be carried forward to each new Zulip major version,
      prettier, ruff, mypy, and a Markdown spelling check that wants US spelling and
      "e.g.,"). Before pushing, run
      `./tools/lint --skip=gitlint oceanposse/ AGENTS.md` (`--fix` handles formatting).
-     CI skips gitlint, but follow Zulip's `subsystem: Title.` commit title format
-     anyway (72 characters at most).
+5. **Follow Zulip's commit message format** for every commit, both code patches and
+   `oceanposse/` changes (see `.claude/CLAUDE.md` and
+   https://zulip.readthedocs.io/en/latest/contributing/commit-discipline.html):
+
+   ```text
+   subsystem: Summary in 72 characters or less.
+
+   The body explains why and how, wrapped at about 70 characters.
+   ```
+
+   - The summary starts with a lower-case subsystem or feature and a colon. Use
+     `oceanposse:` for fork tooling and docs, and the upstream subsystem for code
+     patches (e.g., `url_preview:`). Then a capitalized summary ending with a period.
+   - One minimal, coherent idea per commit, with its tests included.
+   - Check with `./tools/lint --only=gitlint` (it checks commits newer than upstream).
+     CI skips gitlint, so this has to be done locally.
+   - Commits that are already pushed are not rewritten to fix their titles. Production
+     deploys from these branches. Known exceptions: `370aa666df` "Workaround for
+     Google Consent Mode" (the original patch, carried as-is) and `668cfa1c5e`
+     (73-character title).
 
 ## Production server (chat.oceanposse.com)
 
