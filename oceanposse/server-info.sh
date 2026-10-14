@@ -34,7 +34,8 @@ collect() {
         grep -m1 ZULIP_VERSION "$DEPLOY/version.py"
     fi
     ls -l /home/zulip/deployments/ | tail -n 8
-    git -C /srv/zulip.git remote -v 2>/dev/null || echo "(no /srv/zulip.git)"
+    # /srv/zulip.git is owned by zulip; git refuses to read it as root.
+    su zulip -s /bin/bash -c "git -C /srv/zulip.git remote -v" || echo "(cannot read /srv/zulip.git)"
 
     section "zulip.conf"
     cat /etc/zulip/zulip.conf
