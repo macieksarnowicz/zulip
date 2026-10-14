@@ -79,6 +79,7 @@ def main() -> None:
         bulk_change_user_setting(realm, to_change, "web_home_view", HOME_VIEW, acting_user=None)
 
     # 2. Pin the channel for every active human subscriber.
+    assert stream.recipient_id is not None
     subs = Subscription.objects.filter(
         recipient_id=stream.recipient_id,
         active=True,

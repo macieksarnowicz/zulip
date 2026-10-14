@@ -4,6 +4,7 @@ Guidance for AI agents and humans working in this repository. The root `AGENTS.m
 points here, so that it stays a one-line change when upstream ships its own `AGENTS.md`.
 
 Related files:
+
 - `oceanposse/TASKS.md`: open and completed tasks. Keep it up to date: add new tasks
   there, and move finished ones to "Done".
 - `oceanposse/*.sh`: server management scripts (see "Rules for future changes").
@@ -41,7 +42,7 @@ Related files:
 
 Each fork version branch is upstream plus three kinds of commits, in this order:
 
-1. **Code patches.** One commit per customisation, listed under "Our customisation".
+1. **Code patches.** One commit per customization, listed under "Our customization".
    These are **cherry-picked** from the previous version branch, because they modify
    upstream files and may need conflict resolution.
 2. **Fork tooling and docs.** Everything in `oceanposse/` plus the root `AGENTS.md`
@@ -57,9 +58,9 @@ Procedure (example for the next move, 12.x → 13.x, run on the dev machine):
 
 ```bash
 git fetch upstream --tags
-git switch -c 13.x 13.N                            # base on a release tag, e.g. the one to deploy
+git switch -c 13.x 13.N                            # base on a release tag, e.g., the one to deploy
 
-# 1. Code patches: cherry-pick each customisation commit from the previous branch.
+# 1. Code patches: cherry-pick each customization commit from the previous branch.
 git cherry-pick 370aa666df                         # Google Consent Mode workaround
 #    Resolve conflicts, then: ./tools/test-backend zerver.tests.test_link_embed
 
@@ -70,7 +71,7 @@ git checkout 12.x -- oceanposse/ AGENTS.md
 #    (see "Root AGENTS.md" below).
 git commit -m "oceanposse: Carry forward fork tooling and docs from 12.x."
 
-# 3. Update the docs for the new version: commit hashes in "Our customisation",
+# 3. Update the docs for the new version: commit hashes in "Our customization",
 #    "Branching model", and TASKS.md. Then commit and push:
 git push -u origin 13.x
 ```
@@ -86,6 +87,7 @@ tmux new -s upgrade          # after a disconnect, reattach with: tmux attach -t
 ```
 
 If an upgrade is interrupted or fails:
+
 - **Re-run the same command.** The upgrade scripts are idempotent
   (`docs/production/upgrade.md`, "Troubleshooting and rollback"). Do not start the old
   deployment by hand, because the database may already be partly migrated.
@@ -114,7 +116,7 @@ This is the OceanPosse fork of Zulip. Read `oceanposse/AGENTS.md` before making 
 Read the upstream upgrade notes before upgrading production:
 `docs/production/upgrade.md` and `docs/overview/changelog.md`.
 
-## Our customisation (the only code change)
+## Our customization (the only code change)
 
 **Commit:** "Workaround for Google Consent Mode": `370aa666df` on `12.x`
 (`08afa6aeed` on `11.x`).
@@ -211,13 +213,13 @@ To see the app running, use `./tools/run-dev` and open http://localhost:9991.
 ### After switching branches
 
 The provisioned environment matches the checked-out version. After switching between
-version branches (e.g. `11.x` ↔ `12.x`) or pulling upstream changes, run
+version branches (e.g., `11.x` ↔ `12.x`) or pulling upstream changes, run
 `./tools/provision` again before testing. It is quick when little has changed.
 `tools/test-backend` warns if provisioning is out of date.
 
 ### Before pushing a version branch
 
-For every customisation commit on the branch, run its listed tests, plus `./tools/lint`
+For every customization commit on the branch, run its listed tests, plus `./tools/lint`
 on the touched files. Record the result in `TASKS.md`.
 
 ## Rules for future changes
@@ -235,11 +237,11 @@ changes. Every change has to be carried forward to each new Zulip major version,
      than rewriting upstream code.
    - Avoid reformatting or refactoring upstream code, because it makes conflicts in
      later cherry-picks.
-   - Keep each logical customisation in **one self-contained commit** with a clear
+   - Keep each logical customization in **one self-contained commit** with a clear
      message, so it cherry-picks cleanly onto the next version branch.
    - Update or add tests so upstream's test suite still passes.
    - Follow Zulip's lint/format rules (`./tools/lint`, `./tools/run-mypy`).
-3. **Document every customisation in this file** (the "Our customisation" section):
+3. **Document every customization in this file** (the "Our customization" section):
    commit, files, why, and how to test. That list is the checklist for each upgrade.
 4. **Server management tooling** (deploy, upgrade, backup and diagnostic scripts) lives
    in the top-level `oceanposse/` directory, never in upstream directories, so it never
@@ -256,12 +258,19 @@ changes. Every change has to be carried forward to each new Zulip major version,
      (`setup_path()`, `django.setup()`), and call Zulip's `zerver.actions` functions
      rather than writing to models directly. That way clients get live events and the
      audit log records the change. Test them locally against the dev database first.
+   - Upstream CI lints `oceanposse/` like the rest of the repo (shfmt, shellcheck,
+     prettier, ruff, mypy, and a Markdown spelling check that wants US spelling and
+     "e.g.,"). Before pushing, run
+     `./tools/lint --skip=gitlint oceanposse/ AGENTS.md` (`--fix` handles formatting).
+     CI skips gitlint, but follow Zulip's `subsystem: Title.` commit title format
+     anyway (72 characters at most).
 
 ## Production server (chat.oceanposse.com)
 
 Snapshot from `oceanposse/server-info.sh`, run 2026-10-14. Re-run the script to refresh it.
 
 **Host**
+
 - DigitalOcean droplet `chat`: Basic, 2 vCPU / 4 GB RAM (+2 GB swapfile) / 50 GB disk,
   region FRA1 (Frankfurt). Public IP `134.209.237.208`. Runs only Zulip.
 - Ubuntu 22.04.5 LTS. Unattended upgrades are on. `do-agent` (DO monitoring) and
@@ -270,10 +279,11 @@ Snapshot from `oceanposse/server-info.sh`, run 2026-10-14. Re-run the script to 
 - Disk is 67% used (32 of 49 GB). Uploads are 2.9 GB and the database 316 MB, so most of
   the space is used by something else (not yet investigated).
 - Memory was a problem in the past. Worker count and memory settings were trimmed
-  (e.g. `uwsgi_processes=2`) and the server is now stable. About 0.7 GB of swap is in use.
+  (e.g., `uwsgi_processes=2`) and the server is now stable. About 0.7 GB of swap is in use.
   Check memory impact before enabling extra workers or features.
 
 **Access**
+
 - Only through the DigitalOcean web console (launched from the droplet's page in the DO
   dashboard), logged in as root. There is no SSH from the dev machine.
 - Management scripts run **directly on the server**. They must be self-contained
@@ -283,6 +293,7 @@ Snapshot from `oceanposse/server-info.sh`, run 2026-10-14. Re-run the script to 
   `/home/zulip/deployments/current/oceanposse/`.
 
 **Zulip**
+
 - Version `12.3-5-g95599b077f`: the fork's `12.x` branch, with our patch. Deployed
   2026-10-14 with `upgrade-zulip-from-git 12.x`.
 - `/etc/zulip/zulip.conf`: `zulip::profile::standalone`, PostgreSQL 16,
@@ -291,7 +302,7 @@ Snapshot from `oceanposse/server-info.sh`, run 2026-10-14. Re-run the script to 
   branch.
 - Upgrade command: `/home/zulip/deployments/current/scripts/upgrade-zulip-from-git <branch-or-tag>`
   (see `docs/production/upgrade.md`). The log is in `/var/log/zulip/upgrade.log`.
-- One organisation, "OCEAN POSSE" (root domain), with about 300 members
+- One organization, "OCEAN POSSE" (root domain), with about 300 members
   (282 active users and 7 bots in the snapshot).
 - Auth: email/password only (`EmailAuthBackend`). The LDAP/SAML/OIDC/JWT blocks in
   `settings.py` are unused template defaults.
@@ -309,6 +320,7 @@ Snapshot from `oceanposse/server-info.sh`, run 2026-10-14. Re-run the script to 
   (probably an old droplet).
 
 **TLS**
+
 - Let's Encrypt via certbot (`/etc/cron.d/certbot`). The current cert expires
   2026-12-22.
 - The server was migrated from `chat.panamaposse.com` to `chat.oceanposse.com`, and both
@@ -318,25 +330,28 @@ Snapshot from `oceanposse/server-info.sh`, run 2026-10-14. Re-run the script to 
   `chat.oceanposse.com` needs to be supported. Cleanup is deferred (see `TASKS.md`).
 
 **DNS**
+
 - DNS for `oceanposse.com` is hosted at IONOS (`ui-dns.*` nameservers), not at
   DigitalOcean. IONOS also hosts the domain's email.
 
 **Backups**
+
 - Done through **DigitalOcean droplet backups**. Nothing is configured on the server
   itself: no backup cron, no `[postgresql]` backup settings.
 
 **Maintenance window**
+
 - US night time. Traffic is low. Announce upgrades to users in advance.
 
 ## Useful upstream pointers
 
-| Topic | Location |
-|---|---|
-| Production install/upgrade | `docs/production/` |
-| Release notes / changelog | `docs/overview/changelog.md` |
-| Dev environment setup | `docs/development/` |
-| Backend tests | `./tools/test-backend` |
-| Linting / type checks | `./tools/lint`, `./tools/run-mypy` |
-| Writing bots | https://zulip.com/api/writing-bots |
-| Integrations | `zerver/webhooks/`, https://zulip.com/api/integrations-overview |
-| Version info | `version.py` |
+| Topic                      | Location                                                        |
+| -------------------------- | --------------------------------------------------------------- |
+| Production install/upgrade | `docs/production/`                                              |
+| Release notes / changelog  | `docs/overview/changelog.md`                                    |
+| Dev environment setup      | `docs/development/`                                             |
+| Backend tests              | `./tools/test-backend`                                          |
+| Linting / type checks      | `./tools/lint`, `./tools/run-mypy`                              |
+| Writing bots               | https://zulip.com/api/writing-bots                              |
+| Integrations               | `zerver/webhooks/`, https://zulip.com/api/integrations-overview |
+| Version info               | `version.py`                                                    |

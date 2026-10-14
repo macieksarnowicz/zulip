@@ -33,6 +33,8 @@ collect() {
     else
         grep -m1 ZULIP_VERSION "$DEPLOY/version.py"
     fi
+    # Human-readable listing of the deploy symlinks is the point here.
+    # shellcheck disable=SC2012
     ls -l /home/zulip/deployments/ | tail -n 8
     # /srv/zulip.git is owned by zulip; git refuses to read it as root.
     su zulip -s /bin/bash -c "git -C /srv/zulip.git remote -v" || echo "(cannot read /srv/zulip.git)"
@@ -58,9 +60,12 @@ collect() {
     done
 
     section "Cron"
-    echo "--- root:"; crontab -l
-    echo "--- zulip:"; crontab -u zulip -l
-    echo "--- /etc/cron.d:"; ls /etc/cron.d
+    echo "--- root:"
+    crontab -l
+    echo "--- zulip:"
+    crontab -u zulip -l
+    echo "--- /etc/cron.d:"
+    ls /etc/cron.d
 
     section "Auto-updates / firewall"
     cat /etc/apt/apt.conf.d/20auto-upgrades
