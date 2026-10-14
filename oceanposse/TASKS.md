@@ -29,6 +29,9 @@ Production runs upstream 12.3 without the Google Consent Mode patch. Follow
 - [x] Push `12.x` to `origin`.
 - [ ] Announce the maintenance to users. During US night time, run
       `upgrade-zulip-from-git 12.x` on the server.
+      - 2026-10-14: the first attempt was killed when the web console disconnected,
+        leaving services stopped and a stale lock. Removed the lock (nothing was
+        running) and re-ran the upgrade. Outcome pending.
 - [ ] Verify that a Google link preview works and that `oceanposse/` exists in the
       deployment.
 

@@ -75,11 +75,27 @@ git commit -m "oceanposse: Carry forward fork tooling and docs from 12.x."
 git push -u origin 13.x
 ```
 
-Deploy on the server (DO web console, as root, during the maintenance window):
+Deploy on the server (DO web console, as root, during the maintenance window). Check that
+a recent DigitalOcean backup exists first. **Always run the upgrade inside `tmux`**: the
+web console can disconnect mid-upgrade, which kills the upgrade and leaves Zulip stopped.
+This happened during the 12.x deploy.
 
 ```bash
+tmux new -s upgrade          # after a disconnect, reattach with: tmux attach -t upgrade
 /home/zulip/deployments/current/scripts/upgrade-zulip-from-git 13.x
 ```
+
+If an upgrade is interrupted or fails:
+- **Re-run the same command.** The upgrade scripts are idempotent
+  (`docs/production/upgrade.md`, "Troubleshooting and rollback"). Do not start the old
+  deployment by hand, because the database may already be partly migrated.
+- If it says **"Another deployment in progress; waiting for lock"**, the killed run left
+  its lock behind. Press Ctrl+C. Check that nothing is still running with
+  `pgrep -af 'upgrade-zulip|puppet|apt-get|dpkg|webpack'`. Only if that prints nothing,
+  run `rmdir /home/zulip/deployments/lock` and re-run the upgrade.
+- Check for out-of-memory kills (`dmesg -T | grep -iE "out of memory|killed process"`).
+  On this 4 GB droplet the asset build (webpack) is the most memory-hungry step.
+- Details are in `/var/log/zulip/upgrade.log`.
 
 After the fork branch is deployed, the scripts are on the server in
 `/home/zulip/deployments/current/oceanposse/`, so they no longer need to be pasted.
