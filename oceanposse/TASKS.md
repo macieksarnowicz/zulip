@@ -55,8 +55,8 @@ Plan the OS upgrade before Zulip drops 22.04 support. See
 ### T7: Combined feed as home view, and pin "Main Chat" for everyone (in progress)
 Script: `oceanposse/set-user-defaults.py`. Tested on the dev database (dry run, apply,
 re-run shows no changes).
-- [ ] Get the script onto the server and run a dry run. Note the "not subscribed" users.
-- [ ] Run with `--apply`.
+- [x] 2026-10-14: Downloaded to `/home/zulip/set-user-defaults.py`, ran a dry run, then
+      ran it with `--apply` on production. The output was not recorded.
 - [ ] Decide how to handle future users. New users get the Combined feed default
       automatically, but pinning has no organization default, so re-run periodically.
 

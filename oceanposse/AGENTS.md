@@ -295,6 +295,10 @@ Snapshot from `oceanposse/server-info.sh`, run 2026-10-14. Re-run the script to 
   (282 active users and 7 bots in the snapshot).
 - Auth: email/password only (`EmailAuthBackend`). The LDAP/SAML/OIDC/JWT blocks in
   `settings.py` are unused template defaults.
+- User defaults applied with `oceanposse/set-user-defaults.py` on 2026-10-14: the home view
+  is "Combined feed" for everyone and is the organization default for new users, and
+  "Main Chat" is pinned for all subscribers. New users do not get the pin automatically;
+  re-run the script. A copy is at `/home/zulip/set-user-defaults.py` on the server.
 - Uploads are on local disk, in `/home/zulip/uploads`. Push notifications go through
   Zulip's service (`ZULIP_SERVICE_PUSH_NOTIFICATIONS = True`).
 - Email: `EMAIL_HOST = 127.0.0.1:25`, no TLS, so mail goes through a local MTA on the
